@@ -1,33 +1,32 @@
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
 
-/**
- * Handles low stock alerts using a separate thread
- */
+// This class watches for when products are running low on stock
+// It runs in its own thread so it doesn't slow down the main program
 public class LowStockAlertHandler implements InventoryManager.LowStockObserver, Runnable {
+    // This is a special list that can safely handle multiple threads
     private BlockingQueue<Product> lowStockQueue;
+    // This tells us if the alert handler should keep running
     private boolean running;
+    // This is the thread that runs our alert handler
     private Thread alertThread;
 
+    // Set up the alert handler
     public LowStockAlertHandler() {
         this.lowStockQueue = new LinkedBlockingQueue<>();
         this.running = true;
     }
 
-    /**
-     * Starts the alert handler thread
-     */
+    // Start the alert handler running in its own thread
     public void start() {
         if (alertThread == null || !alertThread.isAlive()) {
             alertThread = new Thread(this);
-            alertThread.setDaemon(true);
+            alertThread.setDaemon(true); // This means the thread will stop when the main program stops
             alertThread.start();
         }
     }
 
-    /**
-     * Stops the alert handler thread
-     */
+    // Stop the alert handler
     public void stop() {
         running = false;
         if (alertThread != null) {
@@ -35,26 +34,30 @@ public class LowStockAlertHandler implements InventoryManager.LowStockObserver, 
         }
     }
 
+    // This is called when a product is running low on stock
     @Override
     public void onLowStock(Product product) {
         try {
+            // Add the product to our list of low stock items
             lowStockQueue.put(product);
         } catch (InterruptedException e) {
             Thread.currentThread().interrupt();
         }
     }
 
+    // This is what the alert handler thread does
     @Override
     public void run() {
         while (running) {
             try {
-                // Take product from queue (blocks until available)
+                // Get the next product that's low on stock
+                // This will wait until there is one
                 Product product = lowStockQueue.take();
 
-                // Process low stock alert
+                // Handle the low stock alert
                 processLowStockAlert(product);
 
-                // Sleep to avoid overwhelming the system
+                // Wait a bit before checking for more alerts
                 Thread.sleep(500);
             } catch (InterruptedException e) {
                 Thread.currentThread().interrupt();
@@ -63,11 +66,10 @@ public class LowStockAlertHandler implements InventoryManager.LowStockObserver, 
         }
     }
 
-    /**
-     * Processes a low stock alert
-     */
+    // This handles what to do when a product is low on stock
     private void processLowStockAlert(Product product) {
-        // In a real system, this might send emails, SMS, or notifications
+        // In a real system, this might send emails or notifications
+        // For now, we just print a message
         System.out.println("LOW STOCK ALERT: " + product.getName() +
                 " (ID: " + product.getId() + ") - Current stock: " + product.getQuantity() +
                 ", Minimum level: " + product.getMinStockLevel());
