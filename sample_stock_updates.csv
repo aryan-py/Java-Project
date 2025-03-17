@@ -1,0 +1,6 @@
+productId,quantityChange,transactionType
+[product_id_placeholder_1],5,PURCHASE
+[product_id_placeholder_2],-2,SALE
+[product_id_placeholder_3],10,PURCHASE
+[product_id_placeholder_4],-5,SALE
+[product_id_placeholder_5],20,PURCHASE 

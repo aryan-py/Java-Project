@@ -1,0 +1,11 @@
+name,category,price,quantity,minStockLevel
+Laptop Dell XPS 15,Electronics,1299.99,10,5
+MacBook Pro 16,Electronics,2399.99,8,3
+HP Printer LaserJet,Office Supplies,349.99,15,7
+Wireless Mouse,Accessories,29.99,50,20
+USB-C Cable 2m,Accessories,19.99,100,30
+External SSD 1TB,Storage,149.99,20,8
+Wireless Keyboard,Accessories,59.99,30,15
+Monitor 27" 4K,Electronics,399.99,12,6
+Webcam HD,Accessories,79.99,25,10
+Office Chair,Furniture,199.99,5,2 
